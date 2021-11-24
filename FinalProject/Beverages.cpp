@@ -1,6 +1,6 @@
 #include "Beverages.h"
 #include "Categories.h"
-#include <String>
+#include <string>
 using namespace std;
 
 Beverages::Beverages(string itemName, int itemID, double itemPrice, int itemCount) : Categories("Beverages") {

@@ -12,13 +12,13 @@ void mainMenu() {
 
 	cout << "Select a Category (push 1, 2, 3, etc. to select)" << endl;
 	cout << "1. Beverages" << endl;
-	cout << "Push 0 to quit" << endl;
+	cout << "0. Quit" << endl;
 	cout << endl;
 }
 
 void beverageMenu(vector<Beverages> beverages) {
 
-	system("CLS");
+    system("CLS");
 
 	bool quitMenu = false;
 	int menuOption;
@@ -29,8 +29,8 @@ void beverageMenu(vector<Beverages> beverages) {
 	while (getline(BeveragesFile, line)) {
 		istringstream ss(line);
 
-		string itemName = ""; 
-		int itemID = 0; 
+		string itemName;
+		int itemID = 0;
 		int itemCount = 0;
 		double itemPrice = 0;
 		ss >> itemName >> itemID >> itemPrice >> itemCount;
@@ -40,16 +40,21 @@ void beverageMenu(vector<Beverages> beverages) {
 	}
 	BeveragesFile.close();
 
-	cout << "Cat Name \t Item ID \t Item Name \t Item Price \t Item Count" << endl;
-	cout << beverages[0].getCatName() << '\t' << beverages[0].getItemID() << '\t' << beverages[0].getItemName() << '\t' << beverages[0].getItemPrice() << '\t' << beverages[0].getItemCount() << endl;
+	cout << "Cat Name\tItem ID\tItem Name\tItem Price\tItem Count" << endl;
+    for (auto& i : beverages) {
+        cout << i.getCatName() << '\t' << i.getItemID() << '\t'
+             << i.getItemName() << '\t' << i.getItemPrice() << '\t'
+             << i.getItemCount() << endl;
+    }
+
 	cout << endl;
 
 
-	while (quitMenu == false) {
+	while (!quitMenu) {
 
 		cout << "Select a task" << endl;
 		cout << "1. Order Beverage" << endl;
-		cout << "Push 0 to quit" << endl;
+		cout << "0. Go Back" << endl;
 		cout << endl;
 
 		cin >> menuOption;
@@ -60,8 +65,9 @@ void beverageMenu(vector<Beverages> beverages) {
 			case 2:
 				break;
 			case 0:
-				quitMenu = true;
-				break;
+            default:
+                quitMenu = true;
+                break;
 		}
 
 	}
@@ -76,8 +82,8 @@ int main() {
 	int menuSelect;
 	vector<Beverages> beverages;
 
-	while (quit == false) {
-		system("CLS");
+	while (!quit) {
+        system("CLS");
 		mainMenu();
 		cin >> menuSelect;
 
@@ -86,9 +92,10 @@ int main() {
 				beverageMenu(beverages);
 				break;
 			case 0:
-				cout << "Thank you for using the Inventory Software";
-				quit = true;
-				break;
+            default:
+                cout << "Thank you for using the Inventory Software";
+                quit = true;
+                break;
 		}
 
 
