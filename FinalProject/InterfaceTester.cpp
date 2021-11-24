@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <sstream>	
 #include <vector>
+#include <iomanip>
 using namespace std;
 
 void mainMenu() {
@@ -40,11 +41,17 @@ void beverageMenu(vector<Beverages> beverages) {
 	}
 	BeveragesFile.close();
 
-	cout << "Cat Name\tItem ID\tItem Name\tItem Price\tItem Count" << endl;
+	cout << setw(14) << "Cat Name"
+         << setw(14) << "Item ID"
+         << setw(14) << "Item Name"
+         << setw(14) << "Item Price"
+         << setw(14) << "Item Count" << endl;
     for (auto& i : beverages) {
-        cout << i.getCatName() << '\t' << i.getItemID() << '\t'
-             << i.getItemName() << '\t' << i.getItemPrice() << '\t'
-             << i.getItemCount() << endl;
+        cout << setw(14) << i.getCatName()
+             << setw(14) << i.getItemID()
+             << setw(14) << i.getItemName()
+             << setw(14) << fixed << setprecision(2) << i.getItemPrice()
+             << setw(14) << i.getItemCount() << endl;
     }
 
 	cout << endl;
