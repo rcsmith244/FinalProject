@@ -17,7 +17,7 @@ void mainMenu() {
 	cout << endl;
 }
 
-void beverageMenu(vector<Beverages> beverages) {
+void beverageMenu(vector<Categories> items) {
 
     system("CLS");
 
@@ -25,18 +25,24 @@ void beverageMenu(vector<Beverages> beverages) {
 	int menuOption;
 	ifstream BeveragesFile;
 	string line;
-	BeveragesFile.open("Beverages.txt");
+	BeveragesFile.open("Inventory.txt");
 
 	while (getline(BeveragesFile, line)) {
 		istringstream ss(line);
 
+        string category;
 		string itemName;
 		int itemID = 0;
 		int itemCount = 0;
 		double itemPrice = 0;
-		ss >> itemName >> itemID >> itemPrice >> itemCount;
-		Beverages bClass(itemName, itemID, itemPrice, itemCount);
-		beverages.push_back(bClass);
+		ss >> category >> itemName >> itemID >> itemPrice >> itemCount;
+        if (category == "Beverages") {
+            Beverages beverage(itemName, itemID, itemPrice, itemCount);
+            items.push_back(beverage);
+        } else {
+            Beverages beverage(itemName, itemID, itemPrice, itemCount);
+            items.push_back(beverage);
+        }
 
 	}
 	BeveragesFile.close();
@@ -46,9 +52,9 @@ void beverageMenu(vector<Beverages> beverages) {
          << setw(14) << "Item Name"
          << setw(14) << "Item Price"
          << setw(14) << "Item Count" << endl;
-    for (auto& i : beverages) {
+    for (auto& i : items) {
         cout << setw(14) << i.getCatName()
-             << setw(14) << i.getItemID()
+             << setw(14) << i.getItemId()
              << setw(14) << i.getItemName()
              << setw(14) << fixed << setprecision(2) << i.getItemPrice()
              << setw(14) << i.getItemCount() << endl;
@@ -87,7 +93,7 @@ int main() {
 
 	bool quit = false;
 	int menuSelect;
-	vector<Beverages> beverages;
+	vector<Categories> items;
 
 	while (!quit) {
         system("CLS");
@@ -96,7 +102,7 @@ int main() {
 
 		switch (menuSelect) {
 			case 1:
-				beverageMenu(beverages);
+				beverageMenu(items);
 				break;
 			case 0:
             default:
