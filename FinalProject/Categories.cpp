@@ -1,8 +1,7 @@
 #include "Categories.h"
 using namespace std;
 
-Categories::Categories(string catName) {
-	setCatName(catName);
+Categories::Categories(string catName, string measurement) : catName(catName), measurement(measurement) {
 }
 
 Categories::Categories() {
@@ -64,4 +63,12 @@ string Categories::getItemName() const {
 
 void Categories::setItemName(string itemName) {
     this->itemName = itemName;
+}
+
+void Categories::orderItem(int count) {
+    setItemCount(getItemCount() - count);
+}
+
+string Categories::getMeasurement() const {
+    return measurement;
 }

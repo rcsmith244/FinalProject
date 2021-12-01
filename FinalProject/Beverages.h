@@ -20,7 +20,6 @@ class Beverages : public Categories
 //		void setItemID(int itemID);
 //		void setItemPrice(double itemPrice);
 //		void setItemCount(int itemCount);
-		void orderItem();
 };
 
 #endif // !BEVERAGES_H

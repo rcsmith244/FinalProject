@@ -3,7 +3,7 @@
 #include <string>
 using namespace std;
 
-Beverages::Beverages(string itemName, int itemID, double itemPrice, int itemCount) : Categories("Beverages") {
+Beverages::Beverages(string itemName, int itemID, double itemPrice, int itemCount) : Categories("Beverages", "ct") {
 	setItemName(itemName);
 	setItemId(itemID);
 	setItemPrice(itemPrice);
@@ -41,6 +41,3 @@ Beverages::~Beverages() {}
 //void Beverages::setItemCount(int itemCount) {
 //	this->itemCount = itemCount;
 //}
-void Beverages::orderItem() {
-
-}

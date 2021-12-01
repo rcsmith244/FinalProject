@@ -14,8 +14,9 @@ class Categories
         double itemPrice = 0;
         int itemCount = 0;
         bool reorderItem = false;
+        string measurement;
 	public:
-		Categories(string catName);
+		Categories(string catName, string measurement);
 		Categories();
 		~Categories();
 		string getCatName() const;
@@ -32,6 +33,8 @@ class Categories
         void setReorderItem(bool reorderItem);
         string getItemName() const;
         void setItemName(string itemName);
+        void orderItem(int count);
+        string getMeasurement() const;
 };
 
 #endif // !CATEGORIES_H

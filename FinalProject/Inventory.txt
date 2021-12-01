@@ -1,3 +1,4 @@
 Beverages Tea 11111 3.00 8
 Beverages Soda 11112 2.50 10
 Beverages Coffee 11113 2.00 14
+Bread French 11114 3.50 8
