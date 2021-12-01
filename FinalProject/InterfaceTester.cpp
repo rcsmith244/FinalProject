@@ -70,7 +70,7 @@ void orderMenu(vector<Categories> & items) {
     // TODO: Call a function in a class to write to order file
 }
 
-void categoryMenu(vector<Categories> items, const string & categoryName, int index) {
+void categoryMenu(vector<Categories> items, const string & categoryName) {
 
     system("CLS");
 
@@ -140,10 +140,10 @@ int main() {
 
 		switch (menuSelect) {
 			case 1:
-				categoryMenu(items[0], "Beverages", 0);
+				categoryMenu(items[0], "Beverages");
 				break;
             case 2:
-                categoryMenu(items[1], "Bread", 1);
+                categoryMenu(items[1], "Bread");
                 break;
 			case 0:
             default:
