@@ -1,6 +1,8 @@
 #ifndef CATEGORIES_H
 #define CATEGORIES_H
 #include <string>
+#include <iostream>
+#include <iomanip>
 using namespace std;
 
 class Categories
@@ -35,6 +37,7 @@ class Categories
         void setItemName(string itemName);
         void orderItem(int count);
         string getMeasurement() const;
+        void print();
 };
 
 #endif // !CATEGORIES_H

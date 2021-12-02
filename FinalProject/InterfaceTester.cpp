@@ -7,31 +7,48 @@
 #include <stdlib.h>
 #include <vector>
 #include <iomanip>
+#include <cassert>
 using namespace std;
 
-void openFile(vector<Categories> (& items)[11]) {
+void openFile(string fileName, vector<Categories> & items) {
     ifstream file;
     string line;
-    file.open("Inventory.txt");
+    file.open(fileName, ios::in);
+    if (!file.is_open()) {
+        cout << "File cannot be opened" << endl;
+        assert(false);
+    }
 
     while (getline(file, line)) {
-        istringstream ss(line);
 
-        string category;
-        string itemName;
-        int itemID = 0;
-        int itemCount = 0;
-        double itemPrice = 0;
-        ss >> category >> itemName >> itemID >> itemPrice >> itemCount;
+        // Splits the string using substrings and find
+        string category = line.substr(0, ',');
+
+        size_t startLocation = line.find(',') + 1;
+        size_t size = line.find(',', startLocation + 1) - startLocation;
+        string itemName = line.substr(startLocation, size);
+
+        startLocation = line.find(',', startLocation) + 1;
+        size = line.find(',', startLocation + 1) - startLocation;
+        int itemID = stoi(line.substr(startLocation, size));
+
+        startLocation = line.find(',', startLocation + 1) + 1;
+        size = line.find(',', startLocation + 1) - startLocation;
+        double itemPrice = stod(line.substr(startLocation, size));
+
+        startLocation = line.find(',', startLocation + 1) + 1;
+        size = line.find(',', startLocation + 1) - startLocation;
+        int itemCount = stoi(line.substr(startLocation, size));
+
         if (category == "Beverages") {
             Beverages beverage(itemName, itemID, itemPrice, itemCount);
-            items[0].push_back(beverage);
+            items.push_back(beverage);
         } else if (category == "Bread") {
             Bread bread(itemName, itemID, itemPrice, itemCount);
-            items[1].push_back(bread);
+            items.push_back(bread);
         } else {
             Beverages beverage(itemName, itemID, itemPrice, itemCount);
-            items[0].push_back(beverage);
+            items.push_back(beverage);
         }
 
     }
@@ -40,8 +57,8 @@ void openFile(vector<Categories> (& items)[11]) {
 
 void orderMenu(vector<Categories> & items) {
     cout << setw(16) << "Cat Name"
-         << setw(14) << "Item ID"
          << setw(14) << "Item Name"
+         << setw(14) << "Item ID"
          << setw(14) << "Item Price"
          << setw(14) << "Item Count" << endl;
 
@@ -49,8 +66,8 @@ void orderMenu(vector<Categories> & items) {
     for (auto & i : items) {
             cout << count << "."
                  << setw(14) << i.getCatName()
-                 << setw(14) << i.getItemId()
                  << setw(14) << i.getItemName()
+                 << setw(14) << i.getItemId()
                  << setw(14) << fixed << setprecision(2) << i.getItemPrice()
                  << setw(14) << i.getItemCount() << endl;
         count++;
@@ -78,17 +95,13 @@ void categoryMenu(vector<Categories> items, const string & categoryName) {
 	int menuOption;
 
 	cout << setw(14) << "Cat Name"
-         << setw(14) << "Item ID"
          << setw(14) << "Item Name"
+         << setw(14) << "Item ID"
          << setw(14) << "Item Price"
          << setw(14) << "Item Count" << endl;
 
     for (auto & i : items) {
-        cout << setw(14) << i.getCatName()
-             << setw(14) << i.getItemId()
-             << setw(14) << i.getItemName()
-             << setw(14) << fixed << setprecision(2) << i.getItemPrice()
-             << setw(14) << i.getItemCount() << endl;
+        i.print();
     }
     cout << endl;
 
@@ -130,8 +143,12 @@ int main() {
 
 	bool quit = false;
 	int menuSelect;
+    string fileNames[11] = {"Beverages", "Bread"};
 	vector<Categories> items[11];
-    openFile(items);
+    // TODO: Switch 2 to 11 once all classes are added
+    for (int i = 0; i < 2; i++) {
+        openFile("Inventory/" + fileNames[i] + ".txt", items[i]);
+    }
 
 	while (!quit) {
         system("CLS");

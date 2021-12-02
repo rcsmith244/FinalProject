@@ -66,9 +66,22 @@ void Categories::setItemName(string itemName) {
 }
 
 void Categories::orderItem(int count) {
-    setItemCount(getItemCount() - count);
+    if (count <= getItemCount()) {
+        setItemCount(getItemCount() - count);
+    } else {
+        cout << "Not enough items" << endl;
+    }
 }
 
 string Categories::getMeasurement() const {
     return measurement;
+}
+
+void Categories::print() {
+    cout << setw(14) << getCatName()
+         << setw(14) << getItemName()
+         << setw(14) << getItemId()
+         << setw(14) << fixed << setprecision(2) << getItemPrice()
+         << setw(14) << getItemCount() << endl;
+
 }

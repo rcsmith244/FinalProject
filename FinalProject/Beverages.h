@@ -2,6 +2,9 @@
 #define BEVERAGES_H
 #include "Categories.h"
 #include <string>
+#include <iostream>
+#include <iomanip>
+using namespace std;
 
 class Beverages : public Categories
 {
@@ -12,6 +15,7 @@ class Beverages : public Categories
 		Beverages(string itemName, int itemID, double itemPrice, int itemCount);
 		Beverages();
 		~Beverages();
+        void print();
 //		string getItemName();
 //		int getItemID();
 //		int getItemCount();
