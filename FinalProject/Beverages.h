@@ -15,7 +15,7 @@ class Beverages : public Categories
 		Beverages(string itemName, int itemID, double itemPrice, int itemCount);
 		Beverages();
 		~Beverages();
-        void print();
+        void print() override;
 //		string getItemName();
 //		int getItemID();
 //		int getItemCount();

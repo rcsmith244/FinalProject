@@ -10,7 +10,7 @@
 #include <cassert>
 using namespace std;
 
-void openFile(string fileName, vector<Categories> & items) {
+void openFile(string fileName, vector<Categories*> & items) {
     ifstream file;
     string line;
     file.open(fileName, ios::in);
@@ -41,21 +41,18 @@ void openFile(string fileName, vector<Categories> & items) {
         int itemCount = stoi(line.substr(startLocation, size));
 
         if (category == "Beverages") {
-            Beverages beverage(itemName, itemID, itemPrice, itemCount);
-            items.push_back(beverage);
+            items.emplace_back(new Beverages(itemName, itemID, itemPrice, itemCount));
         } else if (category == "Bread") {
-            Bread bread(itemName, itemID, itemPrice, itemCount);
-            items.push_back(bread);
+            items.emplace_back(new Bread(itemName, itemID, itemPrice, itemCount));
         } else {
-            Beverages beverage(itemName, itemID, itemPrice, itemCount);
-            items.push_back(beverage);
+            items.emplace_back(new Beverages(itemName, itemID, itemPrice, itemCount));
         }
 
     }
     file.close();
 }
 
-void orderMenu(vector<Categories> & items) {
+void orderMenu(vector<Categories*> & items) {
     cout << setw(16) << "Cat Name"
          << setw(14) << "Item Name"
          << setw(14) << "Item ID"
@@ -64,12 +61,8 @@ void orderMenu(vector<Categories> & items) {
 
     int count = 1;
     for (auto & i : items) {
-            cout << count << "."
-                 << setw(14) << i.getCatName()
-                 << setw(14) << i.getItemName()
-                 << setw(14) << i.getItemId()
-                 << setw(14) << fixed << setprecision(2) << i.getItemPrice()
-                 << setw(14) << i.getItemCount() << endl;
+            cout << count << ".";
+            i->print();
         count++;
     }
     cout << endl;
@@ -77,17 +70,19 @@ void orderMenu(vector<Categories> & items) {
     // TODO: Add option to go back with 0 key
     int menuOption;
     cin >> menuOption;
-    int buyCount;
-    cout << "How many " << items[menuOption - 1].getMeasurement()
-         << " of " << items[menuOption - 1].getItemName()
-         << " would you like to buy?" << endl;
-    cin >> buyCount;
-    items[menuOption - 1].orderItem(buyCount);
-    // TODO: Write to file after order
-    // TODO: Call a function in a class to write to order file
+    if (menuOption - 1 >= items.size()) {
+        cout << "Item not found..." << endl;
+    } else {
+        int buyCount;
+        cout << "How many " << items[menuOption - 1]->getMeasurement()
+             << " of " << items[menuOption - 1]->getItemName()
+             << " would you like to buy?" << endl;
+        cin >> buyCount;
+        items[menuOption - 1]->orderItem(buyCount);
+    }
 }
 
-void categoryMenu(vector<Categories> items, const string & categoryName) {
+void categoryMenu(vector<Categories*> items, const string & categoryName) {
 
     system("CLS");
 
@@ -101,7 +96,7 @@ void categoryMenu(vector<Categories> items, const string & categoryName) {
          << setw(14) << "Item Count" << endl;
 
     for (auto & i : items) {
-        i.print();
+        i->print();
     }
     cout << endl;
 
@@ -144,7 +139,7 @@ int main() {
 	bool quit = false;
 	int menuSelect;
     string fileNames[11] = {"Beverages", "Bread"};
-	vector<Categories> items[11];
+	vector<Categories*> items[11];
     // TODO: Switch 2 to 11 once all classes are added
     for (int i = 0; i < 2; i++) {
         openFile("Inventory/" + fileNames[i] + ".txt", items[i]);

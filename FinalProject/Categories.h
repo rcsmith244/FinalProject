@@ -37,7 +37,7 @@ class Categories
         void setItemName(string itemName);
         void orderItem(int count);
         string getMeasurement() const;
-        void print();
+        virtual void print();
 };
 
 #endif // !CATEGORIES_H

@@ -15,8 +15,8 @@ Beverages::~Beverages() {}
 
 void Beverages::print() {
     cout << setw(14) << getCatName()
-         << setw(14) << getItemId()
          << setw(14) << getItemName()
+         << setw(14) << getItemId()
          << setw(14) << fixed << setprecision(2) << getItemPrice()
          << setw(14) << getItemCount() << endl;
 }

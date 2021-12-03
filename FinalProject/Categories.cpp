@@ -66,10 +66,10 @@ void Categories::setItemName(string itemName) {
 }
 
 void Categories::orderItem(int count) {
-    if (count <= getItemCount()) {
+    if (count <= getItemCount() && count > 0) {
         setItemCount(getItemCount() - count);
     } else {
-        cout << "Not enough items" << endl;
+        cout << "Not enough " << getItemName() << " to fulfill your order." << endl;
     }
 }
 
@@ -78,10 +78,10 @@ string Categories::getMeasurement() const {
 }
 
 void Categories::print() {
-    cout << setw(14) << getCatName()
+    /*cout << setw(14) << getCatName()
          << setw(14) << getItemName()
          << setw(14) << getItemId()
          << setw(14) << fixed << setprecision(2) << getItemPrice()
-         << setw(14) << getItemCount() << endl;
-
+         << setw(14) << getItemCount() << endl;*/
+    cout << "Printing from base class..." << endl;
 }
