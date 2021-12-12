@@ -9,12 +9,12 @@ Management::~Management() {}
 void Management::printSupOrders() {
 
     cout << setw(14) << "Order Number"
-        << setw(14) << "Sup Name"
-        << setw(14) << "Item Cata"
-        << setw(14) << "Item Name"
-        << setw(14) << "Date of Sale"
-        << setw(14) << "Delivery Date" 
-        << setw(14) << "Total Due" << endl;
+         << setw(14) << "Sup Name"
+         << setw(14) << "Item Cata"
+         << setw(14) << "Item Name"
+         << setw(14) << "Date of Sale"
+         << setw(14) << "Delivery Date"
+         << setw(14) << "Total Due" << endl;
 
     int count = 1;
     for (int i = 0; i < orders.size(); i ++) {
@@ -65,17 +65,17 @@ string Management::generateDate() {
 
 void Management::restock(vector<Categories*> items) {
 
-    cout << "Item Name " << setw(14) <<
-        " # In Stock " << setw(14) <<
-        " Needs reordered? " << endl;
+    cout << setw(14) << "Item Name"
+         << setw(14) << "# In Stock"
+         << setw(14) << "Reorder?" << endl;
  
     for (auto& i : items) {
-        cout << i->getItemName() << setw(14) << i->getItemCount();
-        if (i->getReorderItem() == true) {
+        cout << setw(14) << i->getItemName()
+             << setw(14) << i->getItemCount();
+        if (i->getReorderItem()) {
             cout << setw(14) << "Yes" << endl;
-        }
-        else {
-            cout << endl;
+        } else {
+            cout << setw(14) << "No" << endl;
         }
 
     }
@@ -117,10 +117,11 @@ void Management::printTotalSalesByDate() {
     file.open("SalesFile.txt", ios::in);
     if (!file.is_open()) {
         cout << "File cannot be opened" << endl;
-        //assert(false);
+        assert(false);
     }
 
-    cout << "Date" << setw(14) << "Total Sales";
+    cout << setw(14) << "Date"
+         << setw(14) << "Total Sales" << endl;
 
     while (getline(file, line)) {
 
@@ -131,7 +132,8 @@ void Management::printTotalSalesByDate() {
             currentDate = nextDate;
         } 
         else if (currentDate.compare(nextDate) != 0) {
-            cout << currentDate << setw(14) <<" $" << runningTotal << endl;
+            cout << setw(14) << currentDate
+                 << setw(14) << fixed << setprecision(2) << runningTotal << endl;
             runningTotal = 0;
             currentDate = nextDate;
         }
@@ -140,11 +142,10 @@ void Management::printTotalSalesByDate() {
         size_t size = line.find(',', startLocation + 1) - startLocation;
         runningTotal+= stod(line.substr(startLocation, size));
 
-        cout << endl;
-
     }
 
-    cout << currentDate << " $" << runningTotal;
+    cout << setw(14) << currentDate
+         << setw(14) << fixed << setprecision(2) << runningTotal << endl;
 
     file.close();
 
@@ -188,43 +189,45 @@ void Management::paySuppliers() {
     orders[menuOption].setOrderTotal(balance);
     
 }
-void Management::printBalanceSheet(vector<Sales> sales) {
+
+void Management::printBalanceSheet(vector<Sales>& sales) {
 
     string currentDate = "";
-    string nextDate = orders[0].getDateOfSale();
+    string nextDate = orders.empty() ? "" : orders[0].getDateOfSale();
     double totalDebt = 0;
     double totalSales = 0;
-  
- 
-        for (int i = 0; i < orders.size(); i++) {  //IF NO ORDERS ARE IN PLACE IT WILL CRASH NEED ERROR CHECKING.
+
+    try {
+        for (auto &order: orders) {  //IF NO ORDERS ARE IN PLACE IT WILL CRASH NEED ERROR CHECKING.
             if (currentDate.compare("") == 0) {
                 currentDate = nextDate;
-            }
-            else if (currentDate.compare(nextDate) != 0) {
+            } else if (currentDate.compare(nextDate) != 0) {
                 cout << currentDate << " $" << totalDebt << endl;
             }
-            totalDebt = totalDebt + orders[i].getOrderTotal();
+            totalDebt = totalDebt + order.getOrderTotal();
         }
 
         cout << "Date" << "     Total Debt" << endl;
         cout << currentDate << " " << totalDebt << endl;
 
         currentDate = "";
-        nextDate = sales[0].getSalesDate();
+        nextDate = sales.empty() ? "" : sales[0].getSalesDate();
 
         for (int i = 0; i < sales.size(); i++) {  //IF NO Sales ARE IN PLACE IT WILL CRASH NEED ERROR CHECKING.
             if (currentDate.compare("") == 0) {
                 currentDate = nextDate;
-            }
-            else if (currentDate.compare(nextDate) != 0) {
+            } else if (currentDate.compare(nextDate) != 0) {
                 cout << currentDate << " $" << totalSales << endl;
             }
             totalSales = totalSales + orders[i].getOrderTotal();
         }
-    
+
         cout << "Date" << "     Total Sales" << endl;
         cout << currentDate << " " << totalSales << endl;
- 
+    }
+    catch (exception& e) {
+        cout << "Hi" << endl;
+    }
 
     system("pause");
 
@@ -243,7 +246,7 @@ void Management::loadSupplierInfo() {
     while (getline(file, line)) {
 
         // Splits the string using substrings and find
-        int pos = line.find(",");
+        int pos = line.find(',');
 
         string supplierName = line.substr(0, pos);
 
@@ -276,20 +279,20 @@ void Management::loadSupplierInfo() {
 
 void Management::printSupplierInfo() {
 
-    cout << "   Company Name"
-        << setw(14) << " Phone Number "
-        << setw(14) << " E-mail Address "
-        << setw(14) << " Item Name " 
-        << setw(14) << " Item Cost " << endl;
+    cout << setw(22) << "Company Name"
+         << setw(18) << "Phone Number"
+         << setw(30) << "E-mail Address"
+         << setw(18) << "Item Name"
+         << setw(18) << "Item Cost" << endl;
 
     int count = 1;
     for (int i = 0; i < supInfo.size(); i++) {
-        cout << count << ". ";
-        cout << supInfo[i].getSupplierName() <<
-            setw(14) << supInfo[i].getSupplierPhoneNumber() <<
-            setw(14) << supInfo[i].getSupplierEmail() <<
-            setw(14) << supInfo[i].getItemName() <<
-            setw(14) << supInfo[i].getItemCost() << endl;
+        cout << count << "."
+             << setw(20) << supInfo[i].getSupplierName()
+             << setw(18) << supInfo[i].getSupplierPhoneNumber()
+             << setw(30) << supInfo[i].getSupplierEmail()
+             << setw(18) << supInfo[i].getItemName()
+             << setw(18) << supInfo[i].getItemCost() << endl;
         count++;
     }
     cout << endl;

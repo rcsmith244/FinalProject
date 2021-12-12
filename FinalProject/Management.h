@@ -35,7 +35,7 @@ class Management
 		void restock(vector<Categories*> items);
 		void printTotalSalesByDate();
 		void paySuppliers();
-		void printBalanceSheet(vector<Sales> sales);
+		void printBalanceSheet(vector<Sales>& sales);
 		void loadSupplierInfo();
 		void printSupplierInfo();
 		void writeToOrdersFile(int buyCount, double itemCost, string supplierName, string supplierAddress, string supplierPhoneNumber, string supplierEmail, string itemName);

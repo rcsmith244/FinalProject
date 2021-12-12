@@ -19,17 +19,17 @@ using namespace std;
 class SalesInterface
 {
 	protected:
-		string fileNames[11] = { "Beverages", "Bread" };
-		vector<Categories*> items[11];
+	string fileNames[12] = {"Beverages", "Bread", "Breakfast", "Snacks", "Dairy", "Produce",
+							"Grains", "Meats", "Misc", "Paper", "PetCare", "Pharmacy"};
+		vector<Categories*> items[12];
 		vector<Sales> sales;
 		vector<CurrentSale> currentSale;
 	public:
 		SalesInterface();
 		~SalesInterface();
 		void writeToSalesFile(string name, string phoneNumber, string itemName, int buyCount, double itemPrice);
-		void openFile(string fileName, vector<Categories*>& items);
 		void orderMenu(vector<Categories*>& items,const string& categoryName);
-		void categoryMenu(vector<Categories*> items, const string& categoryName);
+		void categoryMenu(vector<Categories*>& items, const string& categoryName);
 		void createItem();
 		void mainMenu();
 		void managementMenu(vector<Categories*> items);

@@ -7,7 +7,7 @@ SalesInterface::SalesInterface() {
     FileIO file;
     // TODO: Switch 2 to 11 once all classes are added
     for (int i = 0; i < 12; i++) {
-        file.writeFile("Inventory/" + fileNames[i] + ".txt", items[i]);
+        file.readFile("Inventory/" + fileNames[i] + ".txt", items[i]);
     }
 
 
@@ -35,12 +35,15 @@ SalesInterface::SalesInterface() {
                 createItem();
                 break;
             case 14:
-                viewCart();
+                checkOut();
                 break;
             case 15:
-
+                viewCart();
                 break;
             case 16:
+
+                break;
+            case 17:
                 managementMenu(*items);
                 break;
             case 0:
@@ -102,7 +105,7 @@ void SalesInterface::orderMenu(vector<Categories*>& items, const string& categor
     menuOption = menuOption - 1;
     if (menuOption >= items.size()) {
         cout << "Item not found..." << endl;
-    } else if (menuOption == 0) {
+    } else if (menuOption - 1 == 0) {
         cout << "Going back..." << endl;
     } else {
         int buyCount;
@@ -119,7 +122,7 @@ void SalesInterface::orderMenu(vector<Categories*>& items, const string& categor
 
 
 
-void SalesInterface::categoryMenu(vector<Categories*> items, const string& categoryName) {
+void SalesInterface::categoryMenu(vector<Categories*>& items, const string& categoryName) {
 
     system("CLS");
 
@@ -205,6 +208,11 @@ void SalesInterface::mainMenu() {
     cout << "10. Paper" << endl;
     cout << "11. Pet Care" << endl;
     cout << "12. Pharmacy" << endl;
+    cout << "13. Create a new item." << endl;
+    cout << "14. Check Out / Complete Sale" << endl;
+    cout << "15. View Cart" << endl;
+    cout << "16. Clear Cart" << endl;
+    cout << "17. Management Menu" << endl;
     cout << "0. Quit" << endl;
     cout << endl;
 }
@@ -217,6 +225,7 @@ void SalesInterface::managementMenu(vector<Categories*> items) {
     ptr->loadSupplierInfo();
 
     system("CLS");
+    bool exit = false;
 
     do {
 
@@ -253,9 +262,11 @@ void SalesInterface::managementMenu(vector<Categories*> items) {
             system("CLS");
             ptr->printSupOrders();
         case 0:
+        default:
+            exit = true;
             break;
         }
-    } while (menuSelect != 0);
+    } while (!exit);
 }
 
 void SalesInterface::checkOut() {
@@ -276,7 +287,7 @@ void SalesInterface::checkOut() {
         count++;
         subTotal = subTotal + (currentSale[i].getItemPrice() * currentSale[i].getAmount());
     }
-    cout << endl << "Your order total is: $" << subTotal;
+    cout << endl << "Your order total is: $" << subTotal << endl;
 
     cin.ignore();
     cout << "Please enter your name: ";
@@ -286,12 +297,18 @@ void SalesInterface::checkOut() {
     getline(cin, phoneNumber);
 
     cout << "Do you wish to complete your purchase? (1 = Yes, 2 = No) ";
+    cin >> completePurchase;
     if (completePurchase == 1) {
         for (int i = 0; i < currentSale.size(); i++) {
             sales.emplace_back(name, phoneNumber, currentSale[i].getItemCat(), currentSale[i].getItemName(), currentSale[i].getAmount(), currentSale[i].getItemPrice());
             writeToSalesFile(name, phoneNumber, currentSale[i].getItemName(), currentSale[i].getAmount(), currentSale[i].getItemPrice());
 
         }
+        currentSale.clear();
+    }
+
+    for (auto & i : sales) {
+        cout << i.getItemName() << endl;
     }
 
     do {
@@ -300,7 +317,7 @@ void SalesInterface::checkOut() {
         subTotal = subTotal - amountToPay;
     } while (subTotal > 0);
 
-    cout << "Thank you for your purchaase!" << endl;
+    cout << "Thank you for your purchase!" << endl;
     system("pause");
 
 }
@@ -320,7 +337,7 @@ void SalesInterface::viewCart() {
         subTotal = subTotal + (currentSale[i].getItemPrice() * currentSale[i].getAmount());
     }
 
-    cout << endl << "Your order total is: $" << subTotal;
+    cout << endl << "Your order total is: $" << subTotal << endl;
 
     system("Pause");
 }
