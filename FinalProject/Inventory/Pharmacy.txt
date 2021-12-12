@@ -1,0 +1,2 @@
+Pharmacy,Band Aids,11192,2.00,11,ct,
+Pharmacy,Advil,11502,5.50,10,ct,

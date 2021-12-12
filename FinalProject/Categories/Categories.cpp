@@ -1,17 +1,14 @@
 #include "Categories.h"
 using namespace std;
 
-Categories::Categories(string catName, string measurement) : catName(catName), measurement(measurement) {
-}
-
 Categories::Categories() {
 
 }
 
 Categories::~Categories() {}
 
-void Categories::setCatName(string catName) {
-	this->catName = catName;
+void Categories::setCatName(string category) {
+	this->catName = category;
 }
 
 string Categories::getCatName() const {
@@ -77,11 +74,10 @@ string Categories::getMeasurement() const {
     return measurement;
 }
 
+void Categories::setMeasurement(string measurement) {
+    this->measurement = measurement;
+}
+
 void Categories::print() {
-    /*cout << setw(14) << getCatName()
-         << setw(14) << getItemName()
-         << setw(14) << getItemId()
-         << setw(14) << fixed << setprecision(2) << getItemPrice()
-         << setw(14) << getItemCount() << endl;*/
     cout << "Printing from base class..." << endl;
 }

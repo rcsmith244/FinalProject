@@ -1,0 +1,2 @@
+Dairy,Milk,11342,2.20,12,gal,
+Dairy,Cheese,11343,2.50,15,lb,

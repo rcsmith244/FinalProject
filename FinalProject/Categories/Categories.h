@@ -18,7 +18,6 @@ class Categories
         bool reorderItem = false;
         string measurement;
 	public:
-		Categories(string catName, string measurement);
 		Categories();
 		~Categories();
 		string getCatName() const;
@@ -37,6 +36,7 @@ class Categories
         void setItemName(string itemName);
         void orderItem(int count);
         string getMeasurement() const;
+        void setMeasurement(string measurement);
         virtual void print();
 };
 

@@ -1,3 +1,3 @@
-Beverages,Tea,11111,3.00,8,
-Beverages,Soda,11112,2.50,10,
-Beverages,Coffee,11113,2.00,14,
+Beverages,Tea,11111,3.00,8,ct,
+Beverages,Soda,11112,2.50,10,ct,
+Beverages,Coffee,11113,2.00,14,ct,

@@ -1,0 +1,2 @@
+Snacks,Chocolate Chip,11321,4.00,8,ct,
+Snacks,Chips,11132,3.50,10,ct,
