@@ -33,7 +33,7 @@ class Management
 	public:
 		Management();
 		~Management();
-		void restock(vector<Categories*> items);
+		void restock(vector<Categories*> items[12]);
 		void printTotalSalesByDate(vector<Sales>& sales);
 		void paySuppliers();
 		void printBalanceSheet(vector<Sales>& sales);

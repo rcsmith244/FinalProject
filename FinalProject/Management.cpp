@@ -41,7 +41,7 @@ string Management::generateID() {
         "0123456789");
     string results;
     while (results.size() != 6) {
-        randomInt = rand() % 10 + 1;
+        randomInt = rand() % 9;
         results += legalChars[randomInt];
     }
     return results;
@@ -63,53 +63,71 @@ string Management::generateDate() {
     return date.str();
 }
 
-void Management::restock(vector<Categories*> items) {
+void Management::restock(vector<Categories*> items[12]) {
 
-    cout << setw(16) << "Item Name"
-         << setw(14) << "# In Stock"
-         << setw(14) << "Reorder?" << endl;
+    cout << "Which category do you want to restock?" << endl;
+    cout << "1. Beverages" << endl;
+    cout << "2. Bread & Bakery" << endl;
+    cout << "3. Breakfast" << endl;
+    cout << "4. Snacks" << endl;
+    cout << "5. Dairy" << endl;
+    cout << "6. Produce" << endl;
+    cout << "7. Grains" << endl;
+    cout << "8. Meats" << endl;
+    cout << "9. Miscellaneous" << endl;
+    cout << "10. Paper" << endl;
+    cout << "11. Pet Care" << endl;
+    cout << "12. Pharmacy" << endl;
+    cout << "0. Go Back" << endl;
 
-    int count = 1;
-    for (auto& i : items) {
-        cout << count << "."
-             << setw(14) << i->getItemName()
-             << setw(14) << i->getItemCount();
-        if (i->getReorderItem()) {
-            cout << setw(14) << "Yes" << endl;
-        } else {
-            cout << setw(14) << "No" << endl;
-        }
-        count++;
-
-    }
-    cout << endl;
-    printSupplierInfo();
-
-    cout << endl;
-    cout << "Which item do you want to restock?" << endl;
-    // TODO: Add option to go back with 0 key
     int menuOption;
     cin >> menuOption;
-    menuOption = menuOption - 1; //subtract the 1 here so we don't have to do it each time.
-    if (menuOption >= items.size()) {
-        cout << "Item not found..." << endl;
+    menuOption -= 1;
+    if (menuOption < 12 && menuOption > -1) {
+        cout << endl;
+        printSupplierInfo();
+        cout << setw(16) << "Item Name"
+             << setw(14) << "# In Stock"
+             << setw(14) << "Reorder?" << endl;
+
+        int count = 1;
+        for (auto& i : items[menuOption]) {
+            cout << count << "."
+                 << setw(14) << i->getItemName()
+                 << setw(14) << i->getItemCount();
+            if (i->getReorderItem()) {
+                cout << setw(14) << "Yes" << endl;
+            } else {
+                cout << setw(14) << "No" << endl;
+            }
+            count++;
+
+        }
+
+        cout << "What item do you want?" << endl;
+        int menuOption2;
+        cin >> menuOption2;
+        menuOption2 = menuOption2 - 1; //subtract the 1 here so we don't have to do it each time.
+        if (menuOption2 >= items[menuOption].size()) {
+            cout << "Item not found..." << endl;
+        }
+        else {
+            int buyCount;
+            cout << "How many " << items[menuOption][menuOption2]->getMeasurement()
+                 << " of " << items[menuOption][menuOption2]->getItemName()
+                 << " would you like to buy?" <<  endl;
+            cin >> buyCount;
+
+            cout << "You purchased " << buyCount << " " << items[menuOption][menuOption2]->getItemName() << " @ $" << supInfo[menuOption].getItemCost() << endl;
+
+            items[menuOption][menuOption2]->setItemCount(buyCount + items[menuOption][menuOption2]->getItemCount());
+
+            string id = generateID();
+            orders.emplace_back(id, supInfo[menuOption].getSupplierName(), supInfo[menuOption].getSupplierAddress(), supInfo[menuOption].getSupplierEmail(), items[menuOption][menuOption2]->getCatName(), items[menuOption][menuOption2]->getItemName(), generateDate(), generateDate(), supInfo[menuOption].getItemCost(), buyCount);
+            file.writeToOrdersFile(id, supInfo[menuOption].getSupplierName(), supInfo[menuOption].getSupplierAddress(), supInfo[menuOption].getSupplierEmail(), items[menuOption][menuOption2]->getCatName(), items[menuOption][menuOption2]->getItemName(), generateDate(), generateDate(), supInfo[menuOption].getItemCost(), buyCount);
+        }
     }
-    else {
-        int buyCount;
-        cout << "How many " << items[menuOption]->getMeasurement()
-            << " of " << items[menuOption]->getItemName()
-            << " would you like to buy?" <<  endl;
-        cin >> buyCount;
-
-        cout << "You purchased " << buyCount << " " << items[menuOption]->getItemName() << " @ $" << supInfo[menuOption].getItemCost() << endl;
-
-        items[menuOption]->setItemCount(buyCount + items[menuOption]->getItemCount());
-
-        string id = generateID();
-//        cout << supInfo[menuOption].getSupplierAddress();
-        orders.emplace_back(id, supInfo[menuOption].getSupplierName(), supInfo[menuOption].getSupplierAddress(), supInfo[menuOption].getSupplierEmail(), items[menuOption]->getCatName(), items[menuOption]->getItemName(), generateDate(), generateDate(), supInfo[menuOption].getItemCost(), buyCount);
-        file.writeToOrdersFile(id, supInfo[menuOption].getSupplierName(), supInfo[menuOption].getSupplierAddress(), supInfo[menuOption].getSupplierEmail(), items[menuOption]->getCatName(), items[menuOption]->getItemName(), generateDate(), generateDate(), supInfo[menuOption].getItemCost(), buyCount);
-    }
+    cout << "Going back..." << endl;
 }
 
 void Management::printTotalSalesByDate(vector<Sales>& sales) {

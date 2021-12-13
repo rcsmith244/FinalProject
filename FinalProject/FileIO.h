@@ -20,6 +20,7 @@
 #include <vector>
 #include <fstream>
 #include <cassert>
+#pragma warning(disable : 4996)
 using namespace std;
 
 class FileIO {

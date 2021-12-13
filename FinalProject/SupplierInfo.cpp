@@ -43,7 +43,7 @@ void SupplierInfo::setitemName(string itemName) {
 void SupplierInfo::setSupplierName(string supplierName) {
 	this->supplierName = supplierName;
 }
-void SupplierInfo::setSupplierAddress(string supplierAdddress) {
+void SupplierInfo::setSupplierAddress(string supplierAddress) {
 	this->supplierAddress = supplierAddress;
 }
 void SupplierInfo::setSupplierPhoneNumber(string supplierPhoneNumber) {

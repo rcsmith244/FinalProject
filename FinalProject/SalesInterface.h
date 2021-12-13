@@ -33,7 +33,7 @@ class SalesInterface
 		void categoryMenu(vector<Categories*>& items, const string& categoryName);
 		void createItem();
 		void mainMenu();
-		void managementMenu(vector<Categories*> items);
+		void managementMenu();
 		void checkOut();
 		void viewCart();
 };

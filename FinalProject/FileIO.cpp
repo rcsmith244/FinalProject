@@ -1,5 +1,6 @@
 #include "FileIO.h"
 
+// Reads from a given file and puts each item into its category object in a vector
 void FileIO::readFile(const string& fileName, vector<Categories *> &items) {
     ifstream file;
     string line;
@@ -36,6 +37,7 @@ void FileIO::readFile(const string& fileName, vector<Categories *> &items) {
 
         // TODO: Better try catches everywhere!! :D
         try {
+            // Selects the right object to place the data in
             if (category == "Beverages") {
                 items.emplace_back(new Beverages(itemName, itemID, itemPrice, itemCount, measure));
             } else if (category == "Bread") {
@@ -73,7 +75,9 @@ void FileIO::readFile(const string& fileName, vector<Categories *> &items) {
     file.close();
 }
 
+// Writes all items the given file
 void FileIO::writeFile(const string& fileName, vector<Categories *> &items) {
+
     ofstream file;
     file.open(fileName, ios::out);
     if (!file.is_open()) {
@@ -93,8 +97,7 @@ void FileIO::writeFile(const string& fileName, vector<Categories *> &items) {
     file.close();
 }
 
-
-
+// Writes to the Sales File given the necessary data
 void FileIO::writeToSalesFile(Sales sales) {
 
     double salesTotal = sales.getItemCount() * sales.getItemPrice();
@@ -117,6 +120,7 @@ void FileIO::writeToSalesFile(Sales sales) {
 
 }
 
+// Reads from the sales file into a sales object stored in a vector
 void FileIO::readSalesFile(vector<Sales> &sales) {
     ifstream file;
     string line;
@@ -159,6 +163,7 @@ void FileIO::readSalesFile(vector<Sales> &sales) {
     }
 }
 
+// Writes to the Orders File given the necessary data
 void FileIO::writeToOrdersFile(string orderNumber, string supName, string supAddress, string supEmail, string itemCata, string itemName, string dateOfSale, string deliveryDate, double costOfItem, int quantity) {
 
     double orderTotal = quantity * costOfItem;
@@ -171,12 +176,13 @@ void FileIO::writeToOrdersFile(string orderNumber, string supName, string supAdd
         assert(false);
     }
 
-    file << dateOfSale << orderTotal << orderNumber << "," << supName << "," << supAddress << "," << supEmail << "," << itemCata << "," << itemName << "," << deliveryDate << "," << costOfItem << "," << quantity << "," << endl;
+    file << dateOfSale << "," << orderTotal << "," << orderNumber << "," << supName << "," << supAddress << "," << supEmail << "," << itemCata << "," << itemName << "," << deliveryDate << "," << costOfItem << "," << quantity << "," << endl;
 
     file.close();
 
 }
 
+// Reads from the orders file into an orders object stored in a vector
 void FileIO::readOrdersFile(vector<Orders>& orders) {
     ifstream file;
     string line;

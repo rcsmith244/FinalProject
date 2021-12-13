@@ -4,17 +4,20 @@ SalesInterface::SalesInterface() {
 
     bool quit = false;
     int menuSelect;
-    // TODO: Switch 2 to 11 once all classes are added
+    // Loops to pull in all data from the category files into the items array of vectors
     for (int i = 0; i < 12; i++) {
         file.readFile("Inventory/" + fileNames[i] + ".txt", items[i]);
     }
+    // Populates a sales vector using the sales file
     file.readSalesFile(sales);
 
     while (!quit) {
         system("CLS");
+        // Displays the main menu
         mainMenu();
         cin >> menuSelect;
 
+        // Menu to select which category to buy from or other ordering/managerial options
         switch (menuSelect) {
             case 1:
             case 2:
@@ -40,10 +43,10 @@ SalesInterface::SalesInterface() {
                 viewCart();
                 break;
             case 16:
-
+                currentSale.clear();
                 break;
             case 17:
-                managementMenu(*items);
+                managementMenu();
                 break;
             case 0:
             default:
@@ -65,12 +68,13 @@ SalesInterface::~SalesInterface() {
 void SalesInterface::orderMenu(vector<Categories*>& items, const string& categoryName) {
 
     cout << setw(16) << "Cat Name"
-        << setw(14) << "Item Name"
-        << setw(14) << "Item ID"
-        << setw(14) << "Item Price"
-        << setw(14) << "Item Count"
-        << setw(14) << "Item Measure" << endl;
+         << setw(14) << "Item Name"
+         << setw(14) << "Item ID"
+         << setw(14) << "Item Price"
+         << setw(14) << "Item Count"
+         << setw(14) << "Item Measure" << endl;
 
+    // Prints out each item in the category
     int count = 1;
     for (auto& i : items) {
         cout << count << ".";
@@ -79,23 +83,26 @@ void SalesInterface::orderMenu(vector<Categories*>& items, const string& categor
     }
     cout << endl;
     cout << "Which item do you want?" << endl;
-    // TODO: Add option to go back with 0 key
     int menuOption;
     cin >> menuOption;
     menuOption = menuOption - 1;
-    if (menuOption > items.size()) {
+    // Error checking for out of bounds inputs
+    if (menuOption > items.size() || menuOption < -1) {
         cout << "Item not found..." << endl;
     } else if (menuOption + 1 == 0) {
         cout << "Going back..." << endl;
     } else {
+        // If the input is valid, it asks for order info
         int buyCount;
         cout << "How many " << items[menuOption]->getMeasurement()
             << " of " << items[menuOption]->getItemName()
             << " would you like to buy?" << endl;
         cin >> buyCount;
 
+        // "Orders" the item by removing the amount out of the inventory
         items[menuOption]->orderItem(buyCount);
 
+        // Adds the sale to the current "shopping cart"
         currentSale.emplace_back(items[menuOption]->getItemName(), categoryName, items[menuOption]->getItemPrice(), buyCount);
     }
 }
@@ -109,6 +116,7 @@ void SalesInterface::categoryMenu(vector<Categories*>& items, const string& cate
     bool quitMenu = false;
     int menuOption;
 
+    // Menu Options for displaying what's in each category
     cout << setw(14) << "Cat Name"
          << setw(14) << "Item Name"
          << setw(14) << "Item ID"
@@ -116,6 +124,7 @@ void SalesInterface::categoryMenu(vector<Categories*>& items, const string& cate
          << setw(14) << "Item Count"
          << setw(14) << "Item Measure" << endl;
 
+    // Prints each item in the category
     for (auto & i : items) {
         i->print();
     }
@@ -130,14 +139,14 @@ void SalesInterface::categoryMenu(vector<Categories*>& items, const string& cate
 
         cin >> menuOption;
 
+        // Opens up the ordering menu for the category or just closes it
         switch (menuOption) {
         case 1:
             orderMenu(items, categoryName);
             break;
-        case 2:
-            break;
         case 0:
         default:
+            cout << "Going back..." << endl;
             quitMenu = true;
             break;
         }
@@ -175,6 +184,7 @@ void SalesInterface::createItem() {
 
 void SalesInterface::mainMenu() {
 
+    // Displays all options for ordering items or opening the management submenu
     cout << "Select a Category (push 1, 2, 3, etc. to select)" << endl;
     cout << "1. Beverages" << endl;
     cout << "2. Bread & Bakery" << endl;
@@ -197,7 +207,7 @@ void SalesInterface::mainMenu() {
     cout << endl;
 }
 
-void SalesInterface::managementMenu(vector<Categories*> items) {
+void SalesInterface::managementMenu() {
 
     int menuSelect;
 
@@ -268,6 +278,7 @@ void SalesInterface::checkOut() {
 
     cin.ignore();
     cout << "Please enter your name: ";
+    // TODO: Check for numbers: only letters
     getline(cin, name);
 
     cout << "Please enter your phone number: ";

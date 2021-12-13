@@ -1,2 +1,1 @@
 Produce,Apples,11374,1.75,25,lb,
-Produce,Cheese,11323,2.50,15,lb,
