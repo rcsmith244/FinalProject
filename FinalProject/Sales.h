@@ -17,6 +17,7 @@ class Sales
 	public:
 		Sales(string custName, string custPhone, string itemCata, string itemName, int itemCount, double itemPrice);
 		Sales(string itemName, double itemPrice, int itemCount);
+        Sales(string date, double salesTotal, string custName, string custPhone, string itemName, int itemCount, double itemPrice);
 		Sales();
 		~Sales();
 		string getItemCata();

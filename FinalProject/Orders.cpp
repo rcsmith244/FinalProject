@@ -99,3 +99,20 @@ int Orders::getQuantity() {
 void Orders::setQuantity(int quantity){
 	this->quantity = quantity;
 }
+
+Orders::Orders(string dateOfSale, double orderTotal, string orderNumber, string supName, string supAddress, string supEmail,
+               string itemCata, string itemName, string deliveryDate, double costOfItem, int quantity) {
+
+    setOrderNumber(orderNumber);
+    setDateOfSale(dateOfSale);
+    setDeliveryDate(deliveryDate);
+    setCostOfItem(costOfItem);
+    setItemCata(itemCata);
+    setItemName(itemName);
+    setSupAddress(supAddress);
+    setSupEmail(supEmail);
+    setSupName(supName);
+    setQuantity(quantity);
+
+    this->orderTotal = orderTotal;
+}

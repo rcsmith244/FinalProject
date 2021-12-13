@@ -1,12 +1,12 @@
 #ifndef MANAGEMENT_H
 #define MANAGEMENT_H
 
-#include "SalesInterface.h"
 #include "SupplierInfo.h"
 #include "Sales.h"
 #include "Categories/Categories.h"
 #include "Orders.h"
 #include "BalanceSheet.h"
+#include "FileIO.h"
 
 #include <iostream>
 #include <string>
@@ -28,17 +28,17 @@ class Management
 		vector<SupplierInfo> supInfo;
 		vector<Orders> orders;
 		vector<BalanceSheet> balanceSheet;
+        FileIO file;
 
 	public:
 		Management();
 		~Management();
 		void restock(vector<Categories*> items);
-		void printTotalSalesByDate();
+		void printTotalSalesByDate(vector<Sales>& sales);
 		void paySuppliers();
 		void printBalanceSheet(vector<Sales>& sales);
 		void loadSupplierInfo();
 		void printSupplierInfo();
-		void writeToOrdersFile(int buyCount, double itemCost, string supplierName, string supplierAddress, string supplierPhoneNumber, string supplierEmail, string itemName);
 		string generateID();
 		string generateDate();
 		void printSupOrders();

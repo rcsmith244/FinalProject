@@ -14,6 +14,8 @@
 #include "Categories/Paper.h"
 #include "Categories/PetCare.h"
 #include "Categories/Pharmacy.h"
+#include "Sales.h"
+#include "Orders.h"
 #include <string>
 #include <vector>
 #include <fstream>
@@ -24,6 +26,10 @@ class FileIO {
 public:
     void readFile(const string& fileName, vector<Categories*> & items);
     void writeFile(const string& fileName, vector<Categories*> & items);
+    void writeToSalesFile(Sales sales);
+    void readSalesFile(vector<Sales>& sales);
+    void writeToOrdersFile(string orderNumber, string supName, string supAddress, string supEmail, string itemCata, string itemName, string dateOfSale, string deliveryDate, double costOfItem, int quantity);
+    void readOrdersFile(vector<Orders>& orders);
 };
 
 

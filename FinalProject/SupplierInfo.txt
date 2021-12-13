@@ -1,3 +1,3 @@
 Tea Central,1701 Congress Ave Austin Texas 78701,2134936518,teacentral@tea.org,Tea,1.50,
 Coca Cola Company,One Coca-Cola Plaza Atlanta GA 30313,4046762121,jquincey@cocacola.com,Soda,1.00,
-Folgers,JM Smucker 1 Strawberry ln Orrville Ohio 44667,8559093072,folgers@folgers.com,Coffee,1.00
+Folgers,JM Smucker 1 Strawberry ln Orrville Ohio 44667,8559093072,folgers@folgers.com,Coffee,1.00,

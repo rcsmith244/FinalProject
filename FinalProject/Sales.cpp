@@ -28,6 +28,19 @@ Sales::Sales(string itemName, double itemPrice, int itemCount) {
 
 }
 
+Sales::Sales(string date, double salesTotal, string custName, string custPhone, string itemName, int itemCount, double itemPrice) {
+
+    setCustName(custName);
+    setCustPhone(custPhone);
+    setItemCata(itemCata);
+    setItemName(itemName);
+    setItemCount(itemCount);
+    setItemPrice(itemPrice);
+    this->salesDate = date;
+    this->salesTotal = salesTotal;
+
+}
+
 Sales::Sales() {}
 
 Sales::~Sales() {}

@@ -92,3 +92,145 @@ void FileIO::writeFile(const string& fileName, vector<Categories *> &items) {
     }
     file.close();
 }
+
+
+
+void FileIO::writeToSalesFile(Sales sales) {
+
+    double salesTotal = sales.getItemCount() * sales.getItemPrice();
+    time_t now = time(0);
+    tm* ltm = localtime(&now);
+
+    fstream file;
+    string line;
+    file.open("SalesFile.txt", ios::app);
+    if (!file.is_open()) {
+        cout << "File cannot be opened" << endl;
+        assert(false);
+    }
+
+    file << ltm->tm_mon + 1 << "-" << ltm->tm_mday << "-" << 1900 + ltm->tm_year << "," << salesTotal << ","
+         << sales.getCustName() << "," << sales.getCustPhone() << "," << sales.getItemName() << ","
+         << sales.getItemCount() << "," << sales.getItemPrice() << "," << endl;
+
+    file.close();
+
+}
+
+void FileIO::readSalesFile(vector<Sales> &sales) {
+    ifstream file;
+    string line;
+    file.open("SalesFile.txt", ios::in);
+    if (!file.is_open()) {
+        cout << "File cannot be opened" << endl;
+        assert(false);
+    }
+
+    while (getline(file, line)) {
+
+        // Splits the string using substrings and find
+        string date = line.substr(0, line.find(',', 0));
+
+        size_t startLocation = line.find(',') + 1;
+        size_t size = line.find(',', startLocation + 1) - startLocation;
+        double salesTotal = stod(line.substr(startLocation, size));
+
+        startLocation = line.find(',', startLocation) + 1;
+        size = line.find(',', startLocation + 1) - startLocation;
+        string name = line.substr(startLocation, size);
+
+        startLocation = line.find(',', startLocation + 1) + 1;
+        size = line.find(',', startLocation + 1) - startLocation;
+        string phoneNo = line.substr(startLocation, size);
+
+        startLocation = line.find(',', startLocation + 1) + 1;
+        size = line.find(',', startLocation + 1) - startLocation;
+        string itemName = line.substr(startLocation, size);
+
+        startLocation = line.find(',', startLocation + 1) + 1;
+        size = line.find(',', startLocation + 1) - startLocation;
+        int itemCount = stoi(line.substr(startLocation, size));
+
+        startLocation = line.find(',', startLocation + 1) + 1;
+        size = line.find(',', startLocation + 1) - startLocation;
+        double itemPrice = stod(line.substr(startLocation, size));
+
+        sales.emplace_back(date, salesTotal, name, phoneNo, itemName, itemCount, itemPrice);
+    }
+}
+
+void FileIO::writeToOrdersFile(string orderNumber, string supName, string supAddress, string supEmail, string itemCata, string itemName, string dateOfSale, string deliveryDate, double costOfItem, int quantity) {
+
+    double orderTotal = quantity * costOfItem;
+
+    fstream file;
+    string line;
+    file.open("OrdersFile.txt", ios::app);
+    if (!file.is_open()) {
+        cout << "File cannot be opened" << endl;
+        assert(false);
+    }
+
+    file << dateOfSale << orderTotal << orderNumber << "," << supName << "," << supAddress << "," << supEmail << "," << itemCata << "," << itemName << "," << deliveryDate << "," << costOfItem << "," << quantity << "," << endl;
+
+    file.close();
+
+}
+
+void FileIO::readOrdersFile(vector<Orders>& orders) {
+    ifstream file;
+    string line;
+    file.open("OrdersFile.txt", ios::in);
+    if (!file.is_open()) {
+        cout << "File cannot be opened" << endl;
+        assert(false);
+    }
+
+    while (getline(file, line)) {
+
+        // Splits the string using substrings and find
+        string dateOfSale = line.substr(0, line.find(',', 0));
+
+        size_t startLocation = line.find(',') + 1;
+        size_t size = line.find(',', startLocation + 1) - startLocation;
+        double orderTotal = stod(line.substr(startLocation, size));
+
+        startLocation = line.find(',', startLocation) + 1;
+        size = line.find(',', startLocation + 1) - startLocation;
+        string orderNumber = line.substr(startLocation, size);
+
+        startLocation = line.find(',', startLocation) + 1;
+        size = line.find(',', startLocation + 1) - startLocation;
+        string supName = line.substr(startLocation, size);
+
+        startLocation = line.find(',', startLocation + 1) + 1;
+        size = line.find(',', startLocation + 1) - startLocation;
+        string supAddress = line.substr(startLocation, size);
+
+        startLocation = line.find(',', startLocation + 1) + 1;
+        size = line.find(',', startLocation + 1) - startLocation;
+        string supEmail = line.substr(startLocation, size);
+
+        startLocation = line.find(',', startLocation + 1) + 1;
+        size = line.find(',', startLocation + 1) - startLocation;
+        string itemCata = line.substr(startLocation, size);
+
+        startLocation = line.find(',', startLocation + 1) + 1;
+        size = line.find(',', startLocation + 1) - startLocation;
+        string itemName = line.substr(startLocation, size);
+
+        startLocation = line.find(',', startLocation + 1) + 1;
+        size = line.find(',', startLocation + 1) - startLocation;
+        string deliveryDate = line.substr(startLocation, size);
+
+        startLocation = line.find(',', startLocation + 1) + 1;
+        size = line.find(',', startLocation + 1) - startLocation;
+        double costOfItem = stod(line.substr(startLocation, size));
+
+        startLocation = line.find(',', startLocation + 1) + 1;
+        size = line.find(',', startLocation + 1) - startLocation;
+        int quantity = stoi(line.substr(startLocation, size));
+
+        orders.emplace_back(dateOfSale, orderTotal, orderNumber, supName, supAddress, supEmail, itemCata, itemName, deliveryDate, costOfItem, quantity);
+    }
+}

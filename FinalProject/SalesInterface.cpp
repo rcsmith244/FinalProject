@@ -4,12 +4,11 @@ SalesInterface::SalesInterface() {
 
     bool quit = false;
     int menuSelect;
-    FileIO file;
     // TODO: Switch 2 to 11 once all classes are added
     for (int i = 0; i < 12; i++) {
         file.readFile("Inventory/" + fileNames[i] + ".txt", items[i]);
     }
-
+    file.readSalesFile(sales);
 
     while (!quit) {
         system("CLS");
@@ -63,33 +62,14 @@ SalesInterface::~SalesInterface() {
 
 }
 
-void SalesInterface::writeToSalesFile(string name, string phoneNumber, string itemName, int buyCount, double itemPrice) {
-
-    double salesTotal = buyCount * itemPrice;
-    time_t now = time(0);
-    tm* ltm = localtime(&now);
-
-    fstream file;
-    string line;
-    file.open("SalesFile.txt", ios::app);
-    if (!file.is_open()) {
-        cout << "File cannot be opened" << endl;
-        assert(false);
-    }
-
-    file << ltm->tm_mon + 1 << "-" << ltm->tm_mday << "-" << 1900 + ltm->tm_year << "," << salesTotal << "," << name << "," << phoneNumber << "," << itemName << "," << buyCount << "," << itemPrice << "," << endl;
-
-    file.close();
-
-}
-
 void SalesInterface::orderMenu(vector<Categories*>& items, const string& categoryName) {
 
     cout << setw(16) << "Cat Name"
         << setw(14) << "Item Name"
         << setw(14) << "Item ID"
         << setw(14) << "Item Price"
-        << setw(14) << "Item Count" << endl;
+        << setw(14) << "Item Count"
+        << setw(14) << "Item Measure" << endl;
 
     int count = 1;
     for (auto& i : items) {
@@ -103,9 +83,9 @@ void SalesInterface::orderMenu(vector<Categories*>& items, const string& categor
     int menuOption;
     cin >> menuOption;
     menuOption = menuOption - 1;
-    if (menuOption >= items.size()) {
+    if (menuOption > items.size()) {
         cout << "Item not found..." << endl;
-    } else if (menuOption - 1 == 0) {
+    } else if (menuOption + 1 == 0) {
         cout << "Going back..." << endl;
     } else {
         int buyCount;
@@ -220,9 +200,6 @@ void SalesInterface::mainMenu() {
 void SalesInterface::managementMenu(vector<Categories*> items) {
 
     int menuSelect;
-    Management* ptr;
-    ptr = new Management();
-    ptr->loadSupplierInfo();
 
     system("CLS");
     bool exit = false;
@@ -243,24 +220,24 @@ void SalesInterface::managementMenu(vector<Categories*> items) {
         switch (menuSelect) {
         case 1:
             system("CLS");
-            ptr->restock(items);
+            manager.restock(items);
             cout << endl;
             break;
         case 2:
             system("CLS");
-            ptr->printTotalSalesByDate();
+            manager.printTotalSalesByDate(sales);
             break;
         case 3:
             system("CLS");
-            ptr->printBalanceSheet(sales);
+            manager.printBalanceSheet(sales);
             break;
         case 4:
             system("CLS");
-            ptr->paySuppliers();
+            manager.paySuppliers();
             break;
         case 5:
             system("CLS");
-            ptr->printSupOrders();
+            manager.printSupOrders();
         case 0:
         default:
             exit = true;
@@ -301,14 +278,10 @@ void SalesInterface::checkOut() {
     if (completePurchase == 1) {
         for (int i = 0; i < currentSale.size(); i++) {
             sales.emplace_back(name, phoneNumber, currentSale[i].getItemCat(), currentSale[i].getItemName(), currentSale[i].getAmount(), currentSale[i].getItemPrice());
-            writeToSalesFile(name, phoneNumber, currentSale[i].getItemName(), currentSale[i].getAmount(), currentSale[i].getItemPrice());
+            file.writeToSalesFile(sales[i]);
 
         }
         currentSale.clear();
-    }
-
-    for (auto & i : sales) {
-        cout << i.getItemName() << endl;
     }
 
     do {

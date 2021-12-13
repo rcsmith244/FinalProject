@@ -1,8 +1,8 @@
 #include "Management.h"
 
 Management::Management() {
-
-    
+    file.readOrdersFile(orders);
+    loadSupplierInfo();
 }
 Management::~Management() {}
 
@@ -58,25 +58,28 @@ string Management::generateDate() {
     int day = ltm->tm_mday;
     int year = 1900 + ltm->tm_year;
     
-    date << month << "/" << day << "/" << year;
+    date << month << "-" << day << "-" << year;
 
     return date.str();
 }
 
 void Management::restock(vector<Categories*> items) {
 
-    cout << setw(14) << "Item Name"
+    cout << setw(16) << "Item Name"
          << setw(14) << "# In Stock"
          << setw(14) << "Reorder?" << endl;
- 
+
+    int count = 1;
     for (auto& i : items) {
-        cout << setw(14) << i->getItemName()
+        cout << count << "."
+             << setw(14) << i->getItemName()
              << setw(14) << i->getItemCount();
         if (i->getReorderItem()) {
             cout << setw(14) << "Yes" << endl;
         } else {
             cout << setw(14) << "No" << endl;
         }
+        count++;
 
     }
     cout << endl;
@@ -102,72 +105,32 @@ void Management::restock(vector<Categories*> items) {
 
         items[menuOption]->setItemCount(buyCount + items[menuOption]->getItemCount());
 
-        orders.emplace_back(generateID(), supInfo[menuOption].getSupplierName(), supInfo[menuOption].getSupplierAddress(), supInfo[menuOption].getSupplierEmail(), items[menuOption]->getCatName(), items[menuOption]->getItemName(), generateDate(), generateDate(), supInfo[menuOption].getItemCost(), buyCount);
-
+        string id = generateID();
+//        cout << supInfo[menuOption].getSupplierAddress();
+        orders.emplace_back(id, supInfo[menuOption].getSupplierName(), supInfo[menuOption].getSupplierAddress(), supInfo[menuOption].getSupplierEmail(), items[menuOption]->getCatName(), items[menuOption]->getItemName(), generateDate(), generateDate(), supInfo[menuOption].getItemCost(), buyCount);
+        file.writeToOrdersFile(id, supInfo[menuOption].getSupplierName(), supInfo[menuOption].getSupplierAddress(), supInfo[menuOption].getSupplierEmail(), items[menuOption]->getCatName(), items[menuOption]->getItemName(), generateDate(), generateDate(), supInfo[menuOption].getItemCost(), buyCount);
     }
 }
 
-void Management::printTotalSalesByDate() {
+void Management::printTotalSalesByDate(vector<Sales>& sales) {
 
-    fstream file;
-    string line;
+    double totalSales = 0;
     string currentDate = "";
-    double runningTotal = 0;
-    
-    file.open("SalesFile.txt", ios::in);
-    if (!file.is_open()) {
-        cout << "File cannot be opened" << endl;
-        assert(false);
-    }
+    string nextDate = sales.empty() ? "" : sales[0].getSalesDate();
 
-    cout << setw(14) << "Date"
-         << setw(14) << "Total Sales" << endl;
-
-    while (getline(file, line)) {
-
-        // Splits the string using substrings and find
-        string nextDate = line.substr(0, line.find(','));
-
-        if (currentDate.compare("") == 0) {
-            currentDate = nextDate;
-        } 
-        else if (currentDate.compare(nextDate) != 0) {
-            cout << setw(14) << currentDate
-                 << setw(14) << fixed << setprecision(2) << runningTotal << endl;
-            runningTotal = 0;
-            currentDate = nextDate;
+    nextDate = sales.size() < 1 ? "" : sales[1].getSalesDate();
+    for (int i = 0; i < sales.size(); i++) {  //IF NO Sales ARE IN PLACE IT WILL CRASH NEED ERROR CHECKING.
+        totalSales += sales[i].getSalesTotal();
+        currentDate = sales[i].getSalesDate();
+        if (i + 1 <= sales.size()) {
+            nextDate = sales[i+1].getSalesDate();
         }
-
-        size_t startLocation = line.find(',') + 1;
-        size_t size = line.find(',', startLocation + 1) - startLocation;
-        runningTotal+= stod(line.substr(startLocation, size));
-
+        if (currentDate != nextDate) {
+            cout << setw(14) << currentDate
+                 << setw(14) << fixed << setprecision(2) << totalSales << endl;
+            totalSales = 0;
+        }
     }
-
-    cout << setw(14) << currentDate
-         << setw(14) << fixed << setprecision(2) << runningTotal << endl;
-
-    file.close();
-
-}
-
-void Management::writeToOrdersFile(int buyCount, double itemCost, string supplierName, string supplierAddress, string supplierPhoneNumber, string supplierEmail, string itemName) {
-
-    double orderTotal = buyCount * itemCost;
-    time_t now = time(0);
-    tm* ltm = localtime(&now);
-
-    fstream file;
-    string line;
-    file.open("OrdersFile.txt", ios::app);
-    if (!file.is_open()) {
-        cout << "File cannot be opened" << endl;
-        assert(false);
-    }
-
-    file << generateDate() << "," << orderTotal << "," << supplierName << "," << supplierAddress << "," << supplierPhoneNumber << "," << supplierEmail << "," << itemName << "," << itemCost << "," << endl;
-
-    file.close();
 
 }
 
@@ -198,32 +161,40 @@ void Management::printBalanceSheet(vector<Sales>& sales) {
     double totalSales = 0;
 
     try {
-        for (auto &order: orders) {  //IF NO ORDERS ARE IN PLACE IT WILL CRASH NEED ERROR CHECKING.
-            if (currentDate.compare("") == 0) {
-                currentDate = nextDate;
-            } else if (currentDate.compare(nextDate) != 0) {
-                cout << currentDate << " $" << totalDebt << endl;
+
+        cout << setw(14) << "Date"
+             << setw(14) << "Total Debt" << endl;
+
+        nextDate = sales.size() < 1 ? "" : sales[1].getSalesDate();
+        for (int i = 0; i < orders.size(); i++) {  //IF NO ORDERS ARE IN PLACE IT WILL CRASH NEED ERROR CHECKING.
+            totalDebt += orders[i].getOrderTotal();
+            currentDate = orders[i].getOrderTotal();
+            if (i + 1 <= orders.size()) {
+                nextDate = orders[i+1].getDateOfSale();
             }
-            totalDebt = totalDebt + order.getOrderTotal();
+            if (currentDate != nextDate) {
+                cout << setw(14) << currentDate
+                     << setw(14) << fixed << setprecision(2) << totalDebt << endl;
+                totalDebt = 0;
+            }
         }
 
-        cout << "Date" << "     Total Debt" << endl;
-        cout << currentDate << " " << totalDebt << endl;
+        cout << setw(14) << "Date"
+             << setw(14) << "Total Sales" << endl;
 
-        currentDate = "";
-        nextDate = sales.empty() ? "" : sales[0].getSalesDate();
-
+        nextDate = sales.size() < 1 ? "" : sales[1].getSalesDate();
         for (int i = 0; i < sales.size(); i++) {  //IF NO Sales ARE IN PLACE IT WILL CRASH NEED ERROR CHECKING.
-            if (currentDate.compare("") == 0) {
-                currentDate = nextDate;
-            } else if (currentDate.compare(nextDate) != 0) {
-                cout << currentDate << " $" << totalSales << endl;
+            totalSales += sales[i].getSalesTotal();
+            currentDate = sales[i].getSalesDate();
+            if (i + 1 <= sales.size()) {
+                nextDate = sales[i+1].getSalesDate();
             }
-            totalSales = totalSales + orders[i].getOrderTotal();
+            if (currentDate != nextDate) {
+                cout << setw(14) << currentDate
+                << setw(14) << fixed << setprecision(2) << totalSales << endl;
+                totalSales = 0;
+            }
         }
-
-        cout << "Date" << "     Total Sales" << endl;
-        cout << currentDate << " " << totalSales << endl;
     }
     catch (exception& e) {
         cout << "Hi" << endl;
@@ -246,9 +217,8 @@ void Management::loadSupplierInfo() {
     while (getline(file, line)) {
 
         // Splits the string using substrings and find
-        int pos = line.find(',');
 
-        string supplierName = line.substr(0, pos);
+        string supplierName = line.substr(0, line.find(',', 0));
 
         size_t startLocation = line.find(',') + 1;
         size_t size = line.find(',', startLocation + 1) - startLocation;
@@ -279,21 +249,18 @@ void Management::loadSupplierInfo() {
 
 void Management::printSupplierInfo() {
 
-    cout << setw(22) << "Company Name"
+    cout << setw(20) << "Company Name"
          << setw(18) << "Phone Number"
          << setw(30) << "E-mail Address"
          << setw(18) << "Item Name"
-         << setw(18) << "Item Cost" << endl;
+         << setw(18) << "Item Cost($)" << endl;
 
-    int count = 1;
     for (int i = 0; i < supInfo.size(); i++) {
-        cout << count << "."
-             << setw(20) << supInfo[i].getSupplierName()
+        cout << setw(20) << supInfo[i].getSupplierName()
              << setw(18) << supInfo[i].getSupplierPhoneNumber()
              << setw(30) << supInfo[i].getSupplierEmail()
              << setw(18) << supInfo[i].getItemName()
-             << setw(18) << supInfo[i].getItemCost() << endl;
-        count++;
+             << setw(18) << fixed << setprecision(2) << supInfo[i].getItemCost() << endl;
     }
     cout << endl;
 

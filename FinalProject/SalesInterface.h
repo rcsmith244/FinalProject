@@ -1,10 +1,10 @@
 #ifndef SALESINTERFACE_H
 #define SALESINTERFACE_H
 
+#include "Management.h"
 #include "Sales.h"
 #include "Categories/Categories.h"
 #include "CurrentSale.h"
-#include "Management.h"
 #include "CurrentSale.h"
 #include "FileIO.h"
 #include <string>
@@ -19,15 +19,16 @@ using namespace std;
 class SalesInterface
 {
 	protected:
-	string fileNames[12] = {"Beverages", "Bread", "Breakfast", "Snacks", "Dairy", "Produce",
+	    string fileNames[12] = {"Beverages", "Bread", "Breakfast", "Snacks", "Dairy", "Produce",
 							"Grains", "Meats", "Misc", "Paper", "PetCare", "Pharmacy"};
 		vector<Categories*> items[12];
 		vector<Sales> sales;
 		vector<CurrentSale> currentSale;
+        Management manager;
+        FileIO file;
 	public:
 		SalesInterface();
 		~SalesInterface();
-		void writeToSalesFile(string name, string phoneNumber, string itemName, int buyCount, double itemPrice);
 		void orderMenu(vector<Categories*>& items,const string& categoryName);
 		void categoryMenu(vector<Categories*>& items, const string& categoryName);
 		void createItem();

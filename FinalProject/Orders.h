@@ -21,7 +21,8 @@ class Orders
 		int quantity = 0;
 	public:
 		Orders(string orderNumber, string supName, string supAddress, string supEmail, string itemCata, string itemName, string dateOfSale, string deliveryDate, double costOfItem, int quantity);
-		Orders();
+        Orders(string dateOfSale, double orderTotal, string orderNumber, string supName, string supAddress, string supEmail, string itemCata, string itemName, string deliveryDate, double costOfItem, int quantity);
+        Orders();
 		~Orders();
 		void setOrderNumber(string orderNumber);
 		void setDateOfSale(string dateOfSale);
